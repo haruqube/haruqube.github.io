@@ -13,10 +13,9 @@
             --pink: #ff477e;
             --deep-pink: #c9184a;
             --cream: #fffdfa;
-            --bg-dark: #0f0c29;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             height: 100dvh;
@@ -26,14 +25,7 @@
             justify-content: center;
             overflow: hidden;
             font-family: 'Noto Serif JP', serif;
-            perspective: 1200px; /* 3D効果 */
-        }
-
-        #canvas-confetti {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 100;
+            perspective: 1200px;
         }
 
         /* メインコンテナ */
@@ -42,21 +34,20 @@
             width: 300px;
             height: 200px;
             transform-style: preserve-3d;
-            transition: transform 1s ease;
+            cursor: pointer;
         }
 
-        /* 封筒 */
+        /* 封筒本体 */
         .envelope {
-            position: relative;
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            inset: 0;
             background: var(--deep-pink);
             border-radius: 0 0 10px 10px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             z-index: 10;
         }
 
-        /* 封筒の蓋（3Dフリップ） */
+        /* 封筒の蓋 */
         .flap {
             position: absolute;
             top: 0;
@@ -76,11 +67,9 @@
             background: var(--pink);
             clip-path: polygon(0 0, 100% 0, 50% 60%);
             backface-visibility: hidden;
-            z-index: 2;
         }
 
-        /* 封筒の前面パーツ（V字部分） */
-        .envelope-front {
+        .envelope-front-v {
             position: absolute;
             inset: 0;
             background: var(--deep-pink);
@@ -89,7 +78,6 @@
             border-radius: 0 0 10px 10px;
         }
 
-        /* シーリングスタンプ */
         .seal {
             position: absolute;
             top: 55%;
@@ -99,17 +87,15 @@
             height: 50px;
             background: var(--gold);
             border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 0 10px rgba(255,255,255,0.5);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
             z-index: 50;
             transition: 0.5s;
-            cursor: pointer;
         }
 
-        /* カード */
+        /* カード（ここを修正：最初は pointer-events: none で無視させる） */
         .card {
             position: absolute;
             bottom: 10px;
@@ -120,108 +106,68 @@
             border-radius: 5px;
             padding: 30px 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 20;
+            z-index: 5; /* 封筒より下 */
             opacity: 0;
-            transform: translateY(0) scale(0.9);
-            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s, z-index 0.5s;
+            pointer-events: none; 
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;
             text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
         }
 
-        .card h1 {
-            font-family: 'Great Vibes', cursive;
-            font-size: 2.2rem;
-            color: var(--deep-pink);
+        .card h1 { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: var(--deep-pink); }
+        .card p { font-size: 1rem; line-height: 2; color: #444; opacity: 0; }
+
+        /* 開いた時の状態 */
+        .opened .flap { transform: rotateX(180deg); z-index: 5; }
+        .opened .seal { opacity: 0; transform: translate(-50%, -100%) scale(0); }
+        .opened .card { 
+            opacity: 1; 
+            transform: translateY(-260px) scale(1.1); 
+            z-index: 60; /* 開いたら一番上に */
+            pointer-events: auto; 
         }
 
-        .card p {
-            font-size: 1rem;
-            line-height: 2;
-            color: #444;
-            opacity: 0;
-            transform: translateY(10px);
-        }
+        .opened .card p { animation: fadeInText 0.8s forwards 1s; }
+        @keyframes fadeInText { to { opacity: 1; transform: translateY(0); } }
 
-        /* 開いた時のアニメーション */
-        .opened .flap {
-            transform: rotateX(180deg);
-            z-index: 5;
-        }
-
-        .opened .seal {
-            opacity: 0;
-            transform: translate(-50%, -100%) scale(0);
-        }
-
-        .opened .card {
-            opacity: 1;
-            transform: translateY(-260px) scale(1.1);
-            z-index: 60;
-        }
-
-        .opened .card p {
-            animation: fadeInText 0.8s forwards 1s;
-        }
-
-        @keyframes fadeInText {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ヒント表示 */
         .hint {
             position: absolute;
             top: -60px;
             width: 100%;
             text-align: center;
             color: white;
-            letter-spacing: 2px;
             animation: bounce 2s infinite;
         }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* キラキラ粒子 */
-        .particle {
-            position: fixed;
-            pointer-events: none;
-            animation: particleOut 1s ease-out forwards;
-            z-index: 1000;
-        }
-
-        @keyframes particleOut {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
-        }
+        canvas { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+        .particle { position: fixed; pointer-events: none; z-index: 1000; animation: pOut 1s forwards; }
+        @keyframes pOut { 0% { opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
     </style>
 </head>
 <body>
 
-<canvas id="canvas-confetti"></canvas>
+<canvas id="canvas"></canvas>
 
-<div class="scene" id="scene">
-    <div class="hint">Tap the Seal ✨</div>
+<div class="scene" id="scene" onclick="openEnvelope(event)">
+    <div class="hint">タップして開けてね ✨</div>
     
     <div class="card" id="card">
         <h1>Happy Birthday</h1>
         <div style="font-size: 40px;">🎂</div>
-        <div class="message">
+        <div>
             <p>お誕生日おめでとう！</p>
-            <p style="animation-delay: 1.5s;">あなたにとって最高の</p>
+            <p style="animation-delay: 1.5s;">素敵で幸せな</p>
             <p style="animation-delay: 2s;">一年になりますように。</p>
         </div>
         <div style="font-family: 'Great Vibes'; font-size: 1.5rem; color: var(--gold);">With Love</div>
     </div>
 
-    <div class="envelope" onclick="openEnvelope(event)">
-        <div class="flap">
-            <div class="flap-front"></div>
-        </div>
-        <div class="envelope-front"></div>
+    <div class="envelope">
+        <div class="flap"><div class="flap-front"></div></div>
+        <div class="envelope-front-v"></div>
         <div class="seal">🎀</div>
     </div>
 </div>
@@ -233,45 +179,32 @@
 
         scene.classList.add('opened');
         
-        // 演出：爆発的なキラキラ
-        for(let i=0; i<30; i++) {
-            createParticle(e.clientX || window.innerWidth/2, e.clientY || window.innerHeight/2);
+        // キラキラエフェクト
+        for(let i=0; i<25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = (e.clientX || window.innerWidth/2) + 'px';
+            p.style.top = (e.clientY || window.innerHeight/2) + 'px';
+            p.style.width = p.style.height = (Math.random()*10+5)+'px';
+            p.style.background = `hsl(${Math.random()*50+340}, 100%, 70%)`;
+            p.style.borderRadius = '50%';
+            p.style.setProperty('--tx', (Math.random()-0.5)*300+'px');
+            p.style.setProperty('--ty', (Math.random()-0.5)*300+'px');
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 1000);
         }
 
-        // 紙吹雪開始
         startConfetti();
     }
 
-    // タップ位置からのキラキラ
-    function createParticle(x, y) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const size = Math.random() * 15 + 5;
-        p.style.width = size + 'px';
-        p.style.height = size + 'px';
-        p.style.left = x + 'px';
-        p.style.top = y + 'px';
-        p.style.background = `hsl(${Math.random() * 50 + 340}, 100%, 70%)`;
-        p.style.borderRadius = '50%';
-        
-        const tx = (Math.random() - 0.5) * 300 + 'px';
-        const ty = (Math.random() - 0.5) * 300 + 'px';
-        p.style.setProperty('--tx', tx);
-        p.style.setProperty('--ty', ty);
-        
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 1000);
-    }
-
-    // 紙吹雪アニメーション
-    const canvas = document.getElementById('canvas-confetti');
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
 
     function startConfetti() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        for(let i=0; i<100; i++) {
+        for(let i=0; i<80; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height - canvas.height,
@@ -281,28 +214,18 @@
                 angle: Math.random() * 6
             });
         }
-        updateConfetti();
+        (function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.y += p.speed;
+                p.x += Math.sin(p.angle) * 1;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+                if(p.y > canvas.height) p.y = -20;
+            });
+            requestAnimationFrame(update);
+        })();
     }
-
-    function updateConfetti() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.y += p.speed;
-            p.x += Math.sin(p.angle) * 2;
-            ctx.fillStyle = p.color;
-            ctx.fillRect(p.x, p.y, p.size, p.size);
-            if(p.y > canvas.height) p.y = -20;
-        });
-        requestAnimationFrame(updateConfetti);
-    }
-
-    // 背景のクリックでもキラキラ
-    document.addEventListener('click', (e) => {
-        if(!e.target.closest('.envelope')) {
-            createParticle(e.clientX, e.clientY);
-        }
-    });
 </script>
-
 </body>
 </html>
