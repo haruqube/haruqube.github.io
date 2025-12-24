@@ -6,20 +6,23 @@
     <title>Happy Birthday 🎂</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Noto+Serif+JP:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #d4af37;
-            --pink: #ff477e;
-            --deep-pink: #c9184a;
-            --cream: #fffdfa;
+            --gold: #e8b923;
+            --gold-light: #ffd54f;
+            --pink: #ff6b9d;
+            --pink-dark: #e91e63;
+            --pink-light: #ffc1d3;
+            --cream: #fffef8;
+            --purple: #9c27b0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             height: 100dvh;
-            background: radial-gradient(circle at center, #24243e, #0f0c29);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -28,204 +31,733 @@
             perspective: 1200px;
         }
 
-        /* メインコンテナ */
+        /* 背景の星 */
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* 浮遊するハート */
+        .floating-hearts {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .floating-heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 20px;
+            opacity: 0;
+            animation: floatUp 8s ease-in-out infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* シーン */
         .scene {
             position: relative;
             width: 300px;
             height: 200px;
             transform-style: preserve-3d;
+            z-index: 10;
             cursor: pointer;
         }
 
-        /* 封筒本体 */
+        /* ヒント */
+        .hint {
+            position: absolute;
+            top: -70px;
+            width: 100%;
+            text-align: center;
+            color: var(--pink-light);
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            animation: bounce 2s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(255,107,157,0.5);
+            transition: opacity 0.3s;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .scene.opened .hint {
+            opacity: 0;
+        }
+
+        /* カード共通 */
+        .card {
+            position: absolute;
+            width: 280px;
+            height: 380px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(180deg, var(--cream) 0%, #fff5f8 100%);
+            border-radius: 12px;
+            padding: 25px 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 3px solid var(--pink-light);
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid var(--pink);
+            border-radius: 8px;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        /* カードの装飾 */
+        .card-deco {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.6;
+        }
+        .card-deco.top-left { top: 15px; left: 15px; }
+        .card-deco.top-right { top: 15px; right: 15px; }
+        .card-deco.bottom-left { bottom: 15px; left: 15px; }
+        .card-deco.bottom-right { bottom: 15px; right: 15px; }
+
+        /* 1枚目のカード */
+        .card-1 {
+            z-index: 5;
+        }
+
+        .scene.opened .card-1 {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateY(-100px);
+            z-index: 60;
+            pointer-events: auto;
+        }
+
+        .scene.opened.show-card2 .card-1 {
+            transform: translate(-50%, -50%) translateY(-100px) translateX(-150%) rotateY(-15deg);
+            opacity: 0.6;
+            z-index: 59;
+        }
+
+        /* 2枚目のカード */
+        .card-2 {
+            z-index: 4;
+            background: linear-gradient(180deg, #fff8f0 0%, #fff5f8 100%);
+        }
+
+        .scene.opened .card-2 {
+            opacity: 0;
+            transform: translate(-50%, -50%) translateY(-100px) translateX(50%) scale(0.9);
+            pointer-events: none;
+        }
+
+        .scene.opened.show-card2 .card-2 {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateY(-100px);
+            z-index: 61;
+            pointer-events: auto;
+        }
+
+        .card h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, var(--pink-dark), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .scene.opened .card-1 h1 {
+            animation: slideIn 0.8s ease forwards 0.5s;
+        }
+
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin: 5px 0 10px;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .scene.opened .card-1 .card-icon {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.8s;
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* タイピングエリア */
+        .typing-area {
+            min-height: 160px;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .typing-text {
+            font-size: 1.05rem;
+            line-height: 2.2;
+            color: #555;
+            white-space: pre-wrap;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background: var(--pink);
+            margin-left: 2px;
+            vertical-align: middle;
+            animation: blink 0.6s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* 2枚目のカード - フェードイン用 */
+        .card-2 .card-icon {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .scene.opened.show-card2 .card-2 .card-icon {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.3s;
+        }
+
+        .card-2 .message-text {
+            font-size: 1.1rem;
+            line-height: 2.4;
+            color: #555;
+            white-space: pre-wrap;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .scene.opened.show-card2 .card-2 .message-text {
+            animation: fadeInUp 0.8s ease forwards 0.5s;
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-footer {
+            margin-top: 10px;
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.5rem;
+            color: var(--gold);
+            opacity: 0;
+            text-shadow: 0 0 10px rgba(232,185,35,0.3);
+        }
+
+        .scene.opened.show-card2 .card-2 .card-footer {
+            animation: fadeInUp 0.8s ease forwards 0.9s;
+        }
+
+        /* 封筒 */
+        .envelope-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease 0.3s;
+            z-index: 20;
+        }
+
+        .scene.opened .envelope-wrapper {
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
         .envelope {
             position: absolute;
             inset: 0;
-            background: var(--deep-pink);
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            z-index: 10;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4));
         }
 
-        /* 封筒の蓋 */
+        /* 封筒本体 - シンプルな角丸四角形 */
+        .envelope-body {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+            border-radius: 10px;
+        }
+
+        /* フラップ */
         .flap {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            transform-origin: top;
-            transition: transform 0.6s ease-in-out;
-            z-index: 30;
+            transform-origin: top center;
             transform-style: preserve-3d;
+            transition: transform 0.7s ease-in-out;
+            z-index: 3;
         }
 
-        .flap-front {
+        .flap-svg {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: var(--pink);
-            clip-path: polygon(0 0, 100% 0, 50% 60%);
             backface-visibility: hidden;
         }
 
-        .envelope-front-v {
+        .flap-back-svg {
             position: absolute;
-            inset: 0;
-            background: var(--deep-pink);
-            clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%);
-            z-index: 40;
-            border-radius: 0 0 10px 10px;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transform: rotateX(180deg);
+        }
+
+        .scene.opened .flap {
+            transform: rotateX(-180deg);
         }
 
         .seal {
             position: absolute;
-            top: 55%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background: var(--gold);
+            width: 55px;
+            height: 55px;
+            background: radial-gradient(circle at 30% 30%, var(--gold-light), var(--gold), #f9a825);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            z-index: 50;
-            transition: 0.5s;
+            font-size: 1.6rem;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 20px rgba(232,185,35,0.4);
+            transition: all 0.5s;
         }
 
-        /* カード（ここを修正：最初は pointer-events: none で無視させる） */
-        .card {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            width: 280px;
-            height: 380px;
-            background: var(--cream);
-            border-radius: 5px;
-            padding: 30px 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 5; /* 封筒より下 */
+        .scene.opened .seal {
             opacity: 0;
-            pointer-events: none; 
-            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
+            transform: translate(-50%, -50%) scale(0) rotate(180deg);
         }
 
-        .card h1 { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: var(--deep-pink); }
-        .card p { font-size: 1rem; line-height: 2; color: #444; opacity: 0; }
-
-        /* 開いた時の状態 */
-        .opened .flap { transform: rotateX(180deg); z-index: 5; }
-        .opened .seal { opacity: 0; transform: translate(-50%, -100%) scale(0); }
-        .opened .card { 
-            opacity: 1; 
-            transform: translateY(-260px) scale(1.1); 
-            z-index: 60; /* 開いたら一番上に */
-            pointer-events: auto; 
-        }
-
-        .opened .card p { animation: fadeInText 0.8s forwards 1s; }
-        @keyframes fadeInText { to { opacity: 1; transform: translateY(0); } }
-
-        .hint {
+        /* リセットボタン */
+        .reset-btn {
             position: absolute;
-            top: -60px;
-            width: 100%;
-            text-align: center;
-            color: white;
-            animation: bounce 2s infinite;
+            bottom: -320px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid var(--pink);
+            color: var(--pink-light);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-family: 'Noto Serif JP', serif;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
         }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        canvas { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
-        .particle { position: fixed; pointer-events: none; z-index: 1000; animation: pOut 1s forwards; }
-        @keyframes pOut { 0% { opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
+        .scene.opened .reset-btn {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 3s;
+        }
+
+        .reset-btn:active {
+            transform: translateX(-50%) scale(0.95);
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* エフェクト */
+        canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .emoji-pop {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            font-size: 35px;
+            animation: popOut 1.8s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes popOut {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(0); opacity: 1; }
+            20% { transform: translate(-50%, -50%) scale(1.2) rotate(var(--tr)); opacity: 1; }
+            100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.8) rotate(var(--tr)); opacity: 0; }
+        }
+
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 500;
+            font-size: 24px;
+            animation: sparkleFade 1s forwards;
+        }
+
+        @keyframes sparkleFade {
+            0% { transform: scale(0) rotate(0); opacity: 1; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
+<div class="stars" id="stars"></div>
+<div class="floating-hearts" id="floating-hearts"></div>
 <canvas id="canvas"></canvas>
 
-<div class="scene" id="scene" onclick="openEnvelope(event)">
-    <div class="hint">タップして開けてね ✨</div>
-    
-    <div class="card" id="card">
+<div class="scene" id="scene">
+    <div class="hint">✨ タップして開けてね ✨</div>
+
+    <!-- 1枚目のカード -->
+    <div class="card card-1" id="card-1">
+        <span class="card-deco top-left">🎀</span>
+        <span class="card-deco top-right">🎀</span>
+        <span class="card-deco bottom-left">✨</span>
+        <span class="card-deco bottom-right">✨</span>
+        
         <h1>Happy Birthday</h1>
-        <div style="font-size: 40px;">🎂</div>
-        <div>
-            <p>お誕生日おめでとう！</p>
-            <p style="animation-delay: 1.5s;">素敵で幸せな</p>
-            <p style="animation-delay: 2s;">一年になりますように。</p>
+        <div class="card-icon">🎂</div>
+        <div class="typing-area">
+            <span id="typing-text-1" class="typing-text"></span><span id="cursor-1" class="cursor" style="display:none;"></span>
         </div>
-        <div style="font-family: 'Great Vibes'; font-size: 1.5rem; color: var(--gold);">With Love</div>
     </div>
 
-    <div class="envelope">
-        <div class="flap"><div class="flap-front"></div></div>
-        <div class="envelope-front-v"></div>
-        <div class="seal">🎀</div>
+    <!-- 2枚目のカード -->
+    <div class="card card-2" id="card-2">
+        <span class="card-deco top-left">💖</span>
+        <span class="card-deco top-right">💖</span>
+        <span class="card-deco bottom-left">🌸</span>
+        <span class="card-deco bottom-right">🌸</span>
+        
+        <div class="card-icon">💝</div>
+        <div class="typing-area">
+            <p class="message-text">めっちゃ愛してる<br>はるたか</p>
+        </div>
+        <div class="card-footer">With Love 💕</div>
     </div>
+
+    <div class="envelope-wrapper">
+        <div class="envelope">
+            <!-- 封筒本体 -->
+            <div class="envelope-body"></div>
+
+            <!-- フラップ（蓋） -->
+            <div class="flap">
+                <svg class="flap-svg" viewBox="0 0 300 200" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="flapGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f8a4c0"/>
+                            <stop offset="100%" style="stop-color:#ff6b9d"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M10,0 Q0,0 0,10 L0,15 L150,105 L300,15 L300,10 Q300,0 290,0 Z" fill="url(#flapGradient)"/>
+                </svg>
+                <svg class="flap-back-svg" viewBox="0 0 300 200" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="flapBackGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                            <stop offset="0%" style="stop-color:#880e4f"/>
+                            <stop offset="100%" style="stop-color:#ad1457"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M10,0 Q0,0 0,10 L0,15 L150,105 L300,15 L300,10 Q300,0 290,0 Z" fill="url(#flapBackGradient)"/>
+                </svg>
+            </div>
+
+            <!-- シール -->
+            <div class="seal">🎀</div>
+        </div>
+    </div>
+
+    <button class="reset-btn" id="reset-btn">🎁 もう一度見る</button>
 </div>
 
 <script>
-    function openEnvelope(e) {
-        const scene = document.getElementById('scene');
-        if (scene.classList.contains('opened')) return;
+    const message1 = "愛ちゃん～\nお誕生日おめでとう！🎉\n幸せな一年になりますように";
+    
+    let isOpened = false;
+    let canDoubleTap = false; // ダブルタップ可能フラグ
+    let isTyping1 = false;
+    let showingCard2 = false;
+    let lastTapTime = 0;
 
-        scene.classList.add('opened');
-        
-        // キラキラエフェクト
-        for(let i=0; i<25; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = (e.clientX || window.innerWidth/2) + 'px';
-            p.style.top = (e.clientY || window.innerHeight/2) + 'px';
-            p.style.width = p.style.height = (Math.random()*10+5)+'px';
-            p.style.background = `hsl(${Math.random()*50+340}, 100%, 70%)`;
-            p.style.borderRadius = '50%';
-            p.style.setProperty('--tx', (Math.random()-0.5)*300+'px');
-            p.style.setProperty('--ty', (Math.random()-0.5)*300+'px');
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 1000);
+    // 星の生成
+    function createStars() {
+        const container = document.getElementById('stars');
+        for (let i = 0; i < 60; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            star.style.width = (Math.random() * 2 + 1) + 'px';
+            star.style.height = star.style.width;
+            container.appendChild(star);
         }
-
-        startConfetti();
     }
 
+    // 浮遊ハートの生成
+    function createFloatingHearts() {
+        const container = document.getElementById('floating-hearts');
+        const hearts = ['💕', '💖', '💗', '💓', '🩷'];
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 8 + 's';
+            heart.style.animationDuration = (6 + Math.random() * 4) + 's';
+            container.appendChild(heart);
+        }
+    }
+
+    // 絵文字爆発
+    function createEmojiPop(x, y, emoji) {
+        const el = document.createElement('div');
+        el.className = 'emoji-pop';
+        el.textContent = emoji;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.setProperty('--tx', (Math.random() - 0.5) * 500 + 'px');
+        el.style.setProperty('--ty', (Math.random() - 0.7) * 600 + 'px');
+        el.style.setProperty('--tr', (Math.random() * 720 - 360) + 'deg');
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1800);
+    }
+
+    // キラキラエフェクト
+    function createSparkle(x, y) {
+        const sparkles = ['✨', '⭐', '💫', '✦'];
+        for (let i = 0; i < 5; i++) {
+            const el = document.createElement('div');
+            el.className = 'sparkle';
+            el.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+            el.style.left = (x + (Math.random() - 0.5) * 100) + 'px';
+            el.style.top = (y + (Math.random() - 0.5) * 100) + 'px';
+            el.style.animationDelay = (Math.random() * 0.3) + 's';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 1000);
+        }
+    }
+
+    // タイピング演出
+    function startTyping(targetId, cursorId, message, callback) {
+        const target = document.getElementById(targetId);
+        const cursor = document.getElementById(cursorId);
+        cursor.style.display = 'inline-block';
+        
+        let i = 0;
+        function type() {
+            if (i < message.length) {
+                target.textContent += message.charAt(i);
+                i++;
+                setTimeout(type, 100);
+            } else {
+                setTimeout(() => {
+                    cursor.style.display = 'none';
+                    if (callback) callback();
+                }, 500);
+            }
+        }
+        type();
+    }
+
+    // 紙吹雪
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
+    let confettiRunning = false;
 
     function startConfetti() {
+        if (confettiRunning) return;
+        confettiRunning = true;
+        
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        for(let i=0; i<80; i++) {
+        
+        const colors = ['#ff6b9d', '#ffd54f', '#4fc3f7', '#ba68c8', '#81c784', '#ff8a65', '#f8bbd9'];
+        
+        for (let i = 0; i < 100; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height - canvas.height,
                 size: Math.random() * 8 + 4,
-                color: `hsl(${Math.random() * 360}, 70%, 60%)`,
-                speed: Math.random() * 3 + 2,
-                angle: Math.random() * 6
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: Math.random() * 3 + 2,
+                speedX: Math.random() * 2 - 1,
+                rotation: Math.random() * 360,
+                rotationSpeed: Math.random() * 6 - 3
             });
         }
-        (function update() {
+
+        function update() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
             particles.forEach(p => {
-                p.y += p.speed;
-                p.x += Math.sin(p.angle) * 1;
+                p.y += p.speedY;
+                p.x += p.speedX + Math.sin(p.y * 0.02) * 0.5;
+                p.rotation += p.rotationSpeed;
+                
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
                 ctx.fillStyle = p.color;
-                ctx.fillRect(p.x, p.y, p.size, p.size);
-                if(p.y > canvas.height) p.y = -20;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                ctx.restore();
+                
+                if (p.y > canvas.height + 20) {
+                    p.y = -20;
+                    p.x = Math.random() * canvas.width;
+                }
             });
+            
             requestAnimationFrame(update);
-        })();
+        }
+        update();
     }
+
+    // 封筒を開ける
+    function openEnvelope(e) {
+        if (isOpened) return;
+        isOpened = true;
+        
+        const scene = document.getElementById('scene');
+        scene.classList.add('opened');
+        
+        const x = e.clientX || window.innerWidth / 2;
+        const y = e.clientY || window.innerHeight / 2;
+        
+        createSparkle(x, y);
+        
+        const emojis = ['🎂', '✨', '💖', '🎉', '🎁', '🌹', '🍰', '🎈', '💕', '🩷', '🎀'];
+        for (let i = 0; i < 25; i++) {
+            setTimeout(() => {
+                createEmojiPop(x, y, emojis[Math.floor(Math.random() * emojis.length)]);
+            }, i * 60);
+        }
+        
+        startConfetti();
+        
+        setTimeout(() => {
+            if (!isTyping1) {
+                isTyping1 = true;
+                startTyping('typing-text-1', 'cursor-1', message1, function() {
+                    // タイピング完了後にダブルタップを有効化
+                    canDoubleTap = true;
+                });
+            }
+        }, 1300);
+    }
+
+    // ダブルタップ検出（秘密のコマンド）
+    function handleDoubleTap(e) {
+        // ダブルタップが許可されていない場合は無視
+        if (!canDoubleTap) return;
+        
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        
+        if (tapLength < 300 && tapLength > 0) {
+            e.preventDefault();
+            
+            const scene = document.getElementById('scene');
+            const x = e.clientX || window.innerWidth / 2;
+            const y = e.clientY || window.innerHeight / 2;
+            
+            if (!showingCard2) {
+                scene.classList.add('show-card2');
+                showingCard2 = true;
+                createSparkle(x, y);
+                
+                const hearts = ['💖', '💕', '💗', '💓', '❤️', '🩷', '💝'];
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        createEmojiPop(x, y, hearts[Math.floor(Math.random() * hearts.length)]);
+                    }, i * 50);
+                }
+            } else {
+                scene.classList.remove('show-card2');
+                showingCard2 = false;
+                createSparkle(x, y);
+            }
+        }
+        lastTapTime = currentTime;
+    }
+
+    // リセット
+    function resetCard() {
+        const scene = document.getElementById('scene');
+        scene.classList.remove('opened', 'show-card2');
+        document.getElementById('typing-text-1').textContent = '';
+        document.getElementById('cursor-1').style.display = 'none';
+        isOpened = false;
+        isTyping1 = false;
+        showingCard2 = false;
+        canDoubleTap = false;
+        lastTapTime = 0;
+    }
+
+    // イベント設定
+    const scene = document.getElementById('scene');
+    
+    scene.addEventListener('click', function(e) {
+        if (e.target.id === 'reset-btn') return;
+        
+        if (!isOpened) {
+            openEnvelope(e);
+        } else {
+            handleDoubleTap(e);
+        }
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        resetCard();
+    });
+
+    // 初期化
+    createStars();
+    createFloatingHearts();
 </script>
 </body>
 </html>
