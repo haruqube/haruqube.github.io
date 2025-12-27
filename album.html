@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -16,389 +15,362 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-```
-    body {
-        font-family: 'Noto Sans JP', sans-serif;
-        background: #000;
-        color: white;
-        overflow: hidden;
-        height: 100dvh;
-        user-select: none;
-    }
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #000;
+            color: white;
+            overflow: hidden;
+            height: 100dvh;
+            user-select: none;
+        }
 
-    /* ===== サマリーページ ===== */
-    .summary-page {
-        position: fixed;
-        inset: 0;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 100;
-        transition: opacity 0.5s, transform 0.5s;
-    }
+        .summary-page {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.5s, transform 0.5s;
+        }
 
-    .summary-page.hidden {
-        opacity: 0;
-        transform: scale(1.1);
-        pointer-events: none;
-    }
+        .summary-page.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
 
-    .summary-title {
-        font-size: 1.8rem;
-        font-weight: 900;
-        margin-bottom: 10px;
-        background: linear-gradient(90deg, #ff6b9d, #ffd54f, #ff6b9d);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: shimmer 3s linear infinite;
-    }
+        .summary-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b9d, #ffd54f, #ff6b9d);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
 
-    @keyframes shimmer {
-        to { background-position: 200% center; }
-    }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
 
-    .summary-subtitle {
-        font-size: 0.9rem;
-        color: rgba(255,255,255,0.6);
-        margin-bottom: 25px;
-    }
+        .summary-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 25px;
+        }
 
-    .photo-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 6px;
-        width: 85%;
-        max-width: 350px;
-        margin-bottom: 30px;
-    }
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            width: 90%;
+            max-width: 380px;
+            margin-bottom: 30px;
+        }
 
-    .grid-photo {
-        aspect-ratio: 1;
-        background: linear-gradient(135deg, #ff6b9d33, #9c27b033);
-        border-radius: 8px;
-        overflow: hidden;
-        opacity: 0;
-        transform: scale(0.8);
-        animation: gridAppear 0.4s ease forwards;
-    }
+        .grid-photo {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #ff6b9d33, #9c27b033);
+            border-radius: 8px;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: gridAppear 0.4s ease forwards;
+        }
 
-    .grid-photo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+        .grid-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-    @keyframes gridAppear {
-        to { opacity: 1; transform: scale(1); }
-    }
+        @keyframes gridAppear {
+            to { opacity: 1; transform: scale(1); }
+        }
 
-    .grid-photo:nth-child(1) { animation-delay: 0.1s; }
-    .grid-photo:nth-child(2) { animation-delay: 0.15s; }
-    .grid-photo:nth-child(3) { animation-delay: 0.2s; }
-    .grid-photo:nth-child(4) { animation-delay: 0.25s; }
-    .grid-photo:nth-child(5) { animation-delay: 0.3s; }
-    .grid-photo:nth-child(6) { animation-delay: 0.35s; }
-    .grid-photo:nth-child(7) { animation-delay: 0.4s; }
-    .grid-photo:nth-child(8) { animation-delay: 0.45s; }
-    .grid-photo:nth-child(9) { grid-column: 2; animation-delay: 0.5s; }
-    .grid-photo:nth-child(10) { grid-column: 3; animation-delay: 0.55s; }
+        .grid-photo:nth-child(1) { animation-delay: 0.1s; }
+        .grid-photo:nth-child(2) { animation-delay: 0.15s; }
+        .grid-photo:nth-child(3) { animation-delay: 0.2s; }
+        .grid-photo:nth-child(4) { animation-delay: 0.25s; }
+        .grid-photo:nth-child(5) { animation-delay: 0.3s; }
+        .grid-photo:nth-child(6) { animation-delay: 0.35s; }
+        .grid-photo:nth-child(7) { animation-delay: 0.4s; }
+        .grid-photo:nth-child(8) { animation-delay: 0.45s; }
+        .grid-photo:nth-child(9) { animation-delay: 0.5s; }
+        .grid-photo:nth-child(10) { animation-delay: 0.55s; }
+        .grid-photo:nth-child(11) { animation-delay: 0.6s; }
+        .grid-photo:nth-child(12) { animation-delay: 0.65s; }
+        .grid-photo:nth-child(13) { animation-delay: 0.7s; }
 
-    .start-btn {
-        padding: 15px 50px;
-        background: linear-gradient(90deg, #ff6b9d, #e91e63);
-        border: none;
-        border-radius: 30px;
-        color: white;
-        font-size: 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 4px 20px rgba(233, 30, 99, 0.4);
-    }
+        .start-btn {
+            padding: 15px 50px;
+            background: linear-gradient(90deg, #ff6b9d, #e91e63);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(233, 30, 99, 0.4);
+        }
 
-    .start-btn:active {
-        transform: scale(0.95);
-    }
+        .start-btn:active {
+            transform: scale(0.95);
+        }
 
-    /* ===== ストーリービューア ===== */
-    .story-viewer {
-        position: fixed;
-        inset: 0;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.5s;
-    }
+        .story-viewer {
+            position: fixed;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
 
-    .story-viewer.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+        .story-viewer.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-    /* プログレスバー */
-    .progress-container {
-        position: absolute;
-        top: 15px;
-        left: 10px;
-        right: 10px;
-        display: flex;
-        gap: 4px;
-        z-index: 50;
-    }
+        .progress-container {
+            position: absolute;
+            top: 15px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            gap: 3px;
+            z-index: 50;
+        }
 
-    .progress-bar {
-        flex: 1;
-        height: 3px;
-        background: rgba(255,255,255,0.3);
-        border-radius: 2px;
-        overflow: hidden;
-    }
+        .progress-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
 
-    .progress-bar .fill {
-        height: 100%;
-        width: 0%;
-        background: white;
-        transition: width 0.1s linear;
-    }
+        .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            background: white;
+            transition: width 0.1s linear;
+        }
 
-    .progress-bar.complete .fill {
-        width: 100%;
-    }
+        .progress-bar.complete .fill {
+            width: 100%;
+        }
 
-    .progress-bar.active .fill {
-        width: var(--progress, 0%);
-    }
+        .progress-bar.active .fill {
+            width: var(--progress, 0%);
+        }
 
-    /* スライド */
-    .slide {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.4s, transform 0.4s;
-        transform: scale(0.95);
-        padding: 60px 20px 100px;
-    }
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s, transform 0.4s;
+            transform: scale(0.95);
+            padding: 60px 20px 100px;
+        }
 
-    .slide.active {
-        opacity: 1;
-        transform: scale(1);
-    }
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
 
-    .slide-bg {
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-    }
+        .slide-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+        }
 
-    .slide:nth-child(1) .slide-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .slide:nth-child(2) .slide-bg { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-    .slide:nth-child(3) .slide-bg { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-    .slide:nth-child(4) .slide-bg { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-    .slide:nth-child(5) .slide-bg { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-    .slide:nth-child(6) .slide-bg { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
-    .slide:nth-child(7) .slide-bg { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
-    .slide:nth-child(8) .slide-bg { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
-    .slide:nth-child(9) .slide-bg { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
-    .slide:nth-child(10) .slide-bg { background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); }
+        .slide:nth-child(1) .slide-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .slide:nth-child(2) .slide-bg { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .slide:nth-child(3) .slide-bg { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .slide:nth-child(4) .slide-bg { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .slide:nth-child(5) .slide-bg { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .slide:nth-child(6) .slide-bg { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .slide:nth-child(7) .slide-bg { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+        .slide:nth-child(8) .slide-bg { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        .slide:nth-child(9) .slide-bg { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+        .slide:nth-child(10) .slide-bg { background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); }
+        .slide:nth-child(11) .slide-bg { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }
+        .slide:nth-child(12) .slide-bg { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); }
+        .slide:nth-child(13) .slide-bg { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
 
-    .photo-frame {
-        width: 85%;
-        max-width: 320px;
-        aspect-ratio: 3/4;
-        background: white;
-        border-radius: 12px;
-        padding: 10px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        margin-bottom: 25px;
-        transform: rotate(-2deg);
-    }
+        .photo-frame {
+            width: 85%;
+            max-width: 320px;
+            aspect-ratio: 3/4;
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            transform: rotate(-2deg);
+        }
 
-    .slide:nth-child(even) .photo-frame {
-        transform: rotate(2deg);
-    }
+        .slide:nth-child(even) .photo-frame {
+            transform: rotate(2deg);
+        }
 
-    .photo-frame img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 6px;
-    }
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
 
-    .photo-placeholder {
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #999;
-        font-size: 3rem;
-    }
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 3rem;
+        }
 
-    .caption {
-        font-size: 1.2rem;
-        font-weight: 700;
-        text-align: center;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        max-width: 300px;
-        line-height: 1.6;
-    }
+        .caption {
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            max-width: 300px;
+            line-height: 1.6;
+        }
 
-    /* タップエリア */
-    .tap-area {
-        position: absolute;
-        top: 50px;
-        bottom: 80px;
-        width: 50%;
-        z-index: 10;
-    }
+        .tap-area {
+            position: absolute;
+            top: 50px;
+            bottom: 80px;
+            width: 50%;
+            z-index: 10;
+        }
 
-    .tap-left { left: 0; }
-    .tap-right { right: 0; }
+        .tap-left { left: 0; }
+        .tap-right { right: 0; }
 
-    /* 終了画面 */
-    .end-screen {
-        position: fixed;
-        inset: 0;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.5s;
-        z-index: 200;
-    }
+        .end-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+            z-index: 200;
+        }
 
-    .end-screen.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+        .end-screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-    .end-heart {
-        font-size: 5rem;
-        margin-bottom: 20px;
-        animation: pulse 1s ease-in-out infinite;
-    }
+        .end-heart {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: pulse 1s ease-in-out infinite;
+        }
 
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-    }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
 
-    .end-title {
-        font-size: 1.5rem;
-        font-weight: 900;
-        margin-bottom: 10px;
-        background: linear-gradient(90deg, #ff6b9d, #ffd54f);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+        .end-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b9d, #ffd54f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .end-subtitle {
-        font-size: 0.9rem;
-        color: rgba(255,255,255,0.6);
-        margin-bottom: 30px;
-    }
+        .end-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 30px;
+        }
 
-    .end-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
+        .end-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-    .end-btn {
-        padding: 14px 40px;
-        border-radius: 30px;
-        font-size: 0.95rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
+        .end-btn {
+            padding: 14px 40px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
 
-    .end-btn:active {
-        transform: scale(0.95);
-    }
+        .end-btn:active {
+            transform: scale(0.95);
+        }
 
-    .end-btn.primary {
-        background: linear-gradient(90deg, #ff6b9d, #e91e63);
-        border: none;
-        color: white;
-    }
+        .end-btn.primary {
+            background: linear-gradient(90deg, #ff6b9d, #e91e63);
+            border: none;
+            color: white;
+        }
 
-    .end-btn.secondary {
-        background: transparent;
-        border: 2px solid rgba(255,255,255,0.3);
-        color: white;
-    }
+        .end-btn.secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+        }
 
-    /* 戻るボタン */
-    .back-btn {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 10px 25px;
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 20px;
-        color: white;
-        font-size: 0.85rem;
-        cursor: pointer;
-        z-index: 60;
-        backdrop-filter: blur(10px);
-    }
-</style>
-```
-
+        .back-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 25px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            color: white;
+            font-size: 0.85rem;
+            cursor: pointer;
+            z-index: 60;
+            backdrop-filter: blur(10px);
+        }
+    </style>
 </head>
 <body>
-
-<!-- サマリーページ -->
 
 <div class="summary-page" id="summaryPage">
     <h1 class="summary-title">💕 2024 Memories 💕</h1>
     <p class="summary-subtitle">愛ちゃんとの思い出</p>
-
-```
-<div class="photo-grid" id="photoGrid">
-    <!-- JSで生成 -->
+    <div class="photo-grid" id="photoGrid"></div>
+    <button class="start-btn" id="startBtn">はじめる ✨</button>
 </div>
-
-<button class="start-btn" id="startBtn">はじめる ✨</button>
-```
-
-</div>
-
-<!-- ストーリービューア -->
 
 <div class="story-viewer" id="storyViewer">
-    <div class="progress-container" id="progressContainer">
-        <!-- JSで生成 -->
-    </div>
-
-```
-<div class="tap-area tap-left" id="tapLeft"></div>
-<div class="tap-area tap-right" id="tapRight"></div>
-
-<div id="slides">
-    <!-- JSで生成 -->
+    <div class="progress-container" id="progressContainer"></div>
+    <div class="tap-area tap-left" id="tapLeft"></div>
+    <div class="tap-area tap-right" id="tapRight"></div>
+    <div id="slides"></div>
+    <button class="back-btn" id="backToSummary">← 戻る</button>
 </div>
-
-<button class="back-btn" id="backToSummary">← 戻る</button>
-```
-
-</div>
-
-<!-- 終了画面 -->
 
 <div class="end-screen" id="endScreen">
     <div class="end-heart">💝</div>
@@ -411,27 +383,29 @@
 </div>
 
 <script>
-    // ===== 写真データ（ここを編集してください） =====
+    // ===== 写真データ（13枚） =====
+    // photosフォルダに 1.jpg ~ 13.jpg を置いてください
     const photos = [
-        { src: 'photos/1.jpg', caption: 'キャプション1を入力' },
-        { src: 'photos/2.jpg', caption: 'キャプション2を入力' },
-        { src: 'photos/3.jpg', caption: 'キャプション3を入力' },
-        { src: 'photos/4.jpg', caption: 'キャプション4を入力' },
-        { src: 'photos/5.jpg', caption: 'キャプション5を入力' },
-        { src: 'photos/6.jpg', caption: 'キャプション6を入力' },
-        { src: 'photos/7.jpg', caption: 'キャプション7を入力' },
-        { src: 'photos/8.jpg', caption: 'キャプション8を入力' },
-        { src: 'photos/9.jpg', caption: 'キャプション9を入力' },
-        { src: 'photos/10.jpg', caption: 'キャプション10を入力' },
+        { src: 'photos/1.JPG', caption: 'キャプション1' },
+        { src: 'photos/2.JPG', caption: 'キャプション2' },
+        { src: 'photos/3.JPG', caption: 'キャプション3' },
+        { src: 'photos/4.JPG', caption: 'キャプション4' },
+        { src: 'photos/5.JPG', caption: 'キャプション5' },
+        { src: 'photos/6.JPG', caption: 'キャプション6' },
+        { src: 'photos/7.JPG', caption: 'キャプション7' },
+        { src: 'photos/8.JPG', caption: 'キャプション8' },
+        { src: 'photos/9.JPG', caption: 'キャプション9' },
+        { src: 'photos/10.JPG', caption: 'キャプション10' },
+        { src: 'photos/11.JPG', caption: 'キャプション11' },
+        { src: 'photos/12.JPG', caption: 'キャプション12' },
+        { src: 'photos/13.JPEG', caption: 'キャプション13' },
     ];
 
-    const SLIDE_DURATION = 5000; // 各スライドの表示時間（ミリ秒）
-
+    const SLIDE_DURATION = 5000;
     let currentSlide = 0;
     let progressInterval = null;
     let progress = 0;
 
-    // DOM要素
     const summaryPage = document.getElementById('summaryPage');
     const storyViewer = document.getElementById('storyViewer');
     const endScreen = document.getElementById('endScreen');
@@ -439,17 +413,14 @@
     const progressContainer = document.getElementById('progressContainer');
     const slidesContainer = document.getElementById('slides');
 
-    // 初期化
     function init() {
-        // グリッド生成
-        photos.forEach((photo, i) => {
+        photos.forEach((photo) => {
             const div = document.createElement('div');
             div.className = 'grid-photo';
             div.innerHTML = `<img src="${photo.src}" alt="" onerror="this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;background:#333;display:flex;align-items:center;justify-content:center;color:#666;font-size:1.5rem;\\'>📷</div>'">`;
             photoGrid.appendChild(div);
         });
 
-        // プログレスバー生成
         photos.forEach(() => {
             const bar = document.createElement('div');
             bar.className = 'progress-bar';
@@ -457,8 +428,7 @@
             progressContainer.appendChild(bar);
         });
 
-        // スライド生成
-        photos.forEach((photo, i) => {
+        photos.forEach((photo) => {
             const slide = document.createElement('div');
             slide.className = 'slide';
             slide.innerHTML = `
@@ -472,7 +442,6 @@
         });
     }
 
-    // ストーリー開始
     function startStory() {
         summaryPage.classList.add('hidden');
         storyViewer.classList.add('active');
@@ -481,110 +450,83 @@
         startProgress();
     }
 
-    // スライド表示
     function showSlide(index) {
-        const slides = document.querySelectorAll('.slide');
-        const bars = document.querySelectorAll('.progress-bar');
-
-        slides.forEach((s, i) => {
+        document.querySelectorAll('.slide').forEach((s, i) => {
             s.classList.toggle('active', i === index);
         });
-
-        bars.forEach((b, i) => {
+        document.querySelectorAll('.progress-bar').forEach((b, i) => {
             b.classList.remove('active', 'complete');
             if (i < index) b.classList.add('complete');
             if (i === index) b.classList.add('active');
         });
     }
 
-    // プログレス開始
     function startProgress() {
         progress = 0;
         clearInterval(progressInterval);
-        
         const bar = document.querySelectorAll('.progress-bar')[currentSlide];
-        
         progressInterval = setInterval(() => {
             progress += 100 / (SLIDE_DURATION / 100);
             bar.style.setProperty('--progress', progress + '%');
-            
-            if (progress >= 100) {
-                nextSlide();
-            }
+            if (progress >= 100) nextSlide();
         }, 100);
     }
 
-    // 次のスライド
     function nextSlide() {
         clearInterval(progressInterval);
-        
         if (currentSlide < photos.length - 1) {
             currentSlide++;
             showSlide(currentSlide);
             startProgress();
         } else {
-            // 終了
             storyViewer.classList.remove('active');
             endScreen.classList.add('active');
         }
     }
 
-    // 前のスライド
     function prevSlide() {
         clearInterval(progressInterval);
-        
         if (currentSlide > 0) {
             currentSlide--;
             showSlide(currentSlide);
             startProgress();
         } else {
-            // 最初のスライドをリスタート
             progress = 0;
             startProgress();
         }
     }
 
-    // リプレイ
     function replay() {
         endScreen.classList.remove('active');
         storyViewer.classList.add('active');
         currentSlide = 0;
-        
-        // プログレスバーリセット
         document.querySelectorAll('.progress-bar').forEach(b => {
             b.classList.remove('active', 'complete');
             b.style.setProperty('--progress', '0%');
         });
-        
         showSlide(0);
         startProgress();
     }
 
-    // サマリーに戻る
     function backToSummary() {
         clearInterval(progressInterval);
         storyViewer.classList.remove('active');
         summaryPage.classList.remove('hidden');
-        
-        // リセット
         document.querySelectorAll('.progress-bar').forEach(b => {
             b.classList.remove('active', 'complete');
             b.style.setProperty('--progress', '0%');
         });
     }
 
-    // イベント設定
     document.getElementById('startBtn').addEventListener('click', startStory);
     document.getElementById('tapRight').addEventListener('click', nextSlide);
     document.getElementById('tapLeft').addEventListener('click', prevSlide);
     document.getElementById('replayBtn').addEventListener('click', replay);
     document.getElementById('backToSummary').addEventListener('click', backToSummary);
-    
     document.getElementById('backToLetterBtn').addEventListener('click', () => {
         window.location.href = 'index.html';
     });
 
-    // 初期化実行
     init();
 </script>
 
