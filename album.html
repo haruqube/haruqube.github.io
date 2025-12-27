@@ -1,905 +1,592 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Happy Birthday 🎂</title>
+    <title>2024 Album 💕</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Noto+Serif+JP:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #e8b923;
-            --gold-light: #ffd54f;
-            --pink: #ff6b9d;
-            --pink-dark: #e91e63;
-            --pink-light: #ffc1d3;
-            --cream: #fffef8;
-            --purple: #9c27b0;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+```
+    body {
+        font-family: 'Noto Sans JP', sans-serif;
+        background: #000;
+        color: white;
+        overflow: hidden;
+        height: 100dvh;
+        user-select: none;
+    }
 
-        body {
-            height: 100dvh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            font-family: 'Noto Serif JP', serif;
-            perspective: 1200px;
-        }
+    /* ===== サマリーページ ===== */
+    .summary-page {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        transition: opacity 0.5s, transform 0.5s;
+    }
 
-        .stars {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s ease-in-out infinite;
-            will-change: opacity;
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
+    .summary-page.hidden {
+        opacity: 0;
+        transform: scale(1.1);
+        pointer-events: none;
+    }
 
-        .floating-hearts {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-        .floating-heart {
-            position: absolute;
-            bottom: -50px;
-            font-size: 20px;
-            opacity: 0;
-            animation: floatUp 10s ease-in-out infinite;
-            will-change: transform, opacity;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { transform: translateY(-100vh); opacity: 0; }
-        }
+    .summary-title {
+        font-size: 1.8rem;
+        font-weight: 900;
+        margin-bottom: 10px;
+        background: linear-gradient(90deg, #ff6b9d, #ffd54f, #ff6b9d);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 3s linear infinite;
+    }
 
-        .scene {
-            position: relative;
-            width: 300px;
-            height: 200px;
-            transform-style: preserve-3d;
-            z-index: 10;
-            cursor: pointer;
-        }
+    @keyframes shimmer {
+        to { background-position: 200% center; }
+    }
 
-        .hint {
-            position: absolute;
-            top: -70px;
-            width: 100%;
-            text-align: center;
-            color: var(--pink-light);
-            font-size: 1rem;
-            letter-spacing: 0.1em;
-            animation: bounce 2s ease-in-out infinite;
-            text-shadow: 0 0 10px rgba(255,107,157,0.5);
-            transition: opacity 0.3s;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        .scene.opened .hint { opacity: 0; }
+    .summary-subtitle {
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.6);
+        margin-bottom: 25px;
+    }
 
-        .card {
-            position: absolute;
-            width: 280px;
-            height: 380px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(180deg, var(--cream) 0%, #fff5f8 100%);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            text-align: center;
-            border: 3px solid var(--pink-light);
-            overflow: hidden;
-            opacity: 0;
-            pointer-events: none;
-            transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;
-            will-change: transform, opacity;
-        }
+    .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        width: 85%;
+        max-width: 350px;
+        margin-bottom: 30px;
+    }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 10px; left: 10px; right: 10px; bottom: 10px;
-            border: 2px solid var(--pink);
-            border-radius: 8px;
-            opacity: 0.2;
-            pointer-events: none;
-        }
+    .grid-photo {
+        aspect-ratio: 1;
+        background: linear-gradient(135deg, #ff6b9d33, #9c27b033);
+        border-radius: 8px;
+        overflow: hidden;
+        opacity: 0;
+        transform: scale(0.8);
+        animation: gridAppear 0.4s ease forwards;
+    }
 
-        .card-deco {
-            position: absolute;
-            font-size: 1.5rem;
-            opacity: 0.6;
-        }
-        .card-deco.top-left { top: 15px; left: 15px; }
-        .card-deco.top-right { top: 15px; right: 15px; }
-        .card-deco.bottom-left { bottom: 15px; left: 15px; }
-        .card-deco.bottom-right { bottom: 15px; right: 15px; }
+    .grid-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-        .card-1 { z-index: 5; }
-        .scene.opened .card-1 {
-            opacity: 1;
-            transform: translate(-50%, -50%) translateY(-100px);
-            z-index: 60;
-            pointer-events: auto;
-        }
-        .scene.opened.show-card2 .card-1 {
-            transform: translate(-50%, -50%) translateY(-100px) translateX(-150%) rotateY(-15deg);
-            opacity: 0.6;
-            z-index: 59;
-        }
+    @keyframes gridAppear {
+        to { opacity: 1; transform: scale(1); }
+    }
 
-        .card-2 {
-            z-index: 4;
-            background: linear-gradient(180deg, #fff8f0 0%, #fff5f8 100%);
-        }
-        .scene.opened .card-2 {
-            opacity: 0;
-            transform: translate(-50%, -50%) translateY(-100px) translateX(50%) scale(0.9);
-            pointer-events: none;
-        }
-        .scene.opened.show-card2 .card-2 {
-            opacity: 1;
-            transform: translate(-50%, -50%) translateY(-100px);
-            z-index: 61;
-            pointer-events: auto;
-        }
+    .grid-photo:nth-child(1) { animation-delay: 0.1s; }
+    .grid-photo:nth-child(2) { animation-delay: 0.15s; }
+    .grid-photo:nth-child(3) { animation-delay: 0.2s; }
+    .grid-photo:nth-child(4) { animation-delay: 0.25s; }
+    .grid-photo:nth-child(5) { animation-delay: 0.3s; }
+    .grid-photo:nth-child(6) { animation-delay: 0.35s; }
+    .grid-photo:nth-child(7) { animation-delay: 0.4s; }
+    .grid-photo:nth-child(8) { animation-delay: 0.45s; }
+    .grid-photo:nth-child(9) { grid-column: 2; animation-delay: 0.5s; }
+    .grid-photo:nth-child(10) { grid-column: 3; animation-delay: 0.55s; }
 
-        .card h1 {
-            font-family: 'Great Vibes', cursive;
-            font-size: 2.4rem;
-            background: linear-gradient(135deg, var(--pink-dark), var(--purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        .scene.opened .card-1 h1 {
-            animation: slideIn 0.8s ease forwards 0.5s;
-        }
-        @keyframes slideIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .start-btn {
+        padding: 15px 50px;
+        background: linear-gradient(90deg, #ff6b9d, #e91e63);
+        border: none;
+        border-radius: 30px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 20px rgba(233, 30, 99, 0.4);
+    }
 
-        .card-icon {
-            font-size: 2rem;
-            margin: 5px 0 10px;
-            opacity: 0;
-            transform: scale(0);
-        }
-        .scene.opened .card-1 .card-icon {
-            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.8s;
-        }
-        @keyframes popIn {
-            to { opacity: 1; transform: scale(1); }
-        }
+    .start-btn:active {
+        transform: scale(0.95);
+    }
 
-        .typing-area {
-            min-height: 160px;
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    /* ===== ストーリービューア ===== */
+    .story-viewer {
+        position: fixed;
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s;
+    }
 
-        .typing-text {
-            font-size: 1.05rem;
-            line-height: 2.2;
-            color: #555;
-            white-space: pre-wrap;
-        }
+    .story-viewer.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
 
-        .cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1em;
-            background: var(--pink);
-            margin-left: 1px;
-            vertical-align: baseline;
-            position: relative;
-            top: 0.15em;
-            animation: blink 0.6s infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
+    /* プログレスバー */
+    .progress-container {
+        position: absolute;
+        top: 15px;
+        left: 10px;
+        right: 10px;
+        display: flex;
+        gap: 4px;
+        z-index: 50;
+    }
 
-        .card-2 .card-icon { opacity: 0; transform: scale(0); }
-        .scene.opened.show-card2 .card-2 .card-icon {
-            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.3s;
-        }
+    .progress-bar {
+        flex: 1;
+        height: 3px;
+        background: rgba(255,255,255,0.3);
+        border-radius: 2px;
+        overflow: hidden;
+    }
 
-        .card-2 .message-text {
-            font-size: 1.1rem;
-            line-height: 2.4;
-            color: #555;
-            white-space: pre-wrap;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        .scene.opened.show-card2 .card-2 .message-text {
-            animation: fadeInUp 0.8s ease forwards 0.5s;
-        }
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .progress-bar .fill {
+        height: 100%;
+        width: 0%;
+        background: white;
+        transition: width 0.1s linear;
+    }
 
-        .card-footer {
-            margin-top: 10px;
-            font-family: 'Great Vibes', cursive;
-            font-size: 1.5rem;
-            color: var(--gold);
-            opacity: 0;
-            text-shadow: 0 0 10px rgba(232,185,35,0.3);
-        }
-        .scene.opened.show-card2 .card-2 .card-footer {
-            animation: fadeInUp 0.8s ease forwards 0.9s;
-        }
+    .progress-bar.complete .fill {
+        width: 100%;
+    }
 
-        .envelope-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease 0.3s;
-            z-index: 20;
-        }
-        .scene.opened .envelope-wrapper {
-            opacity: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
+    .progress-bar.active .fill {
+        width: var(--progress, 0%);
+    }
 
-        .envelope {
-            position: absolute;
-            inset: 0;
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4));
-        }
+    /* スライド */
+    .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.4s, transform 0.4s;
+        transform: scale(0.95);
+        padding: 60px 20px 100px;
+    }
 
-        .envelope-body {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
-            border-radius: 10px;
-        }
+    .slide.active {
+        opacity: 1;
+        transform: scale(1);
+    }
 
-        .flap {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            transform-origin: top center;
-            transform-style: preserve-3d;
-            transition: transform 0.7s ease-in-out;
-            z-index: 3;
-        }
-        .flap-svg, .flap-back-svg {
-            position: absolute;
-            width: 100%; height: 100%;
-            backface-visibility: hidden;
-        }
-        .flap-back-svg { transform: rotateX(180deg); }
-        .scene.opened .flap { transform: rotateX(-180deg); }
+    .slide-bg {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+    }
 
-        .seal {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 55px; height: 55px;
-            background: radial-gradient(circle at 30% 30%, var(--gold-light), var(--gold), #f9a825);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            z-index: 10;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 20px rgba(232,185,35,0.4);
-            transition: all 0.5s;
-        }
-        .scene.opened .seal {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0) rotate(180deg);
-        }
+    .slide:nth-child(1) .slide-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .slide:nth-child(2) .slide-bg { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .slide:nth-child(3) .slide-bg { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .slide:nth-child(4) .slide-bg { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    .slide:nth-child(5) .slide-bg { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+    .slide:nth-child(6) .slide-bg { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+    .slide:nth-child(7) .slide-bg { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+    .slide:nth-child(8) .slide-bg { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+    .slide:nth-child(9) .slide-bg { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+    .slide:nth-child(10) .slide-bg { background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); }
 
-        .reset-btn {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 30px;
-            background: rgba(255,255,255,0.1);
-            border: 2px solid var(--pink);
-            color: var(--pink-light);
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-family: 'Noto Serif JP', serif;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s;
-            backdrop-filter: blur(10px);
-            z-index: 200;
-        }
-        .scene.opened ~ .reset-btn {
-            opacity: 1;
-            visibility: visible;
-            transition-delay: 3s;
-        }
-        .reset-btn:active {
-            transform: translateX(-50%) scale(0.95);
-            background: rgba(255,255,255,0.2);
-        }
+    .photo-frame {
+        width: 85%;
+        max-width: 320px;
+        aspect-ratio: 3/4;
+        background: white;
+        border-radius: 12px;
+        padding: 10px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        margin-bottom: 25px;
+        transform: rotate(-2deg);
+    }
 
-        .album-btn {
-            position: fixed;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 30px;
-            background: linear-gradient(90deg, #ff6b9d, #e91e63);
-            border: none;
-            color: white;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-family: 'Noto Sans JP', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s;
-            box-shadow: 0 4px 20px rgba(233, 30, 99, 0.4);
-            z-index: 200;
-        }
-        .scene.opened ~ .album-btn {
-            opacity: 1;
-            visibility: visible;
-            transition-delay: 3.5s;
-        }
-        .album-btn:active {
-            transform: translateX(-50%) scale(0.95);
-        }
+    .slide:nth-child(even) .photo-frame {
+        transform: rotate(2deg);
+    }
 
-        canvas {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 100;
-        }
+    .photo-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+    }
 
-        .emoji-burst {
-            position: fixed;
-            pointer-events: none;
-            z-index: 1000;
-            font-size: 32px;
-            will-change: transform, opacity;
-        }
+    .photo-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 3rem;
+    }
 
-        .petal {
-            position: fixed;
-            pointer-events: none;
-            z-index: 999;
-            will-change: transform, opacity;
-        }
+    .caption {
+        font-size: 1.2rem;
+        font-weight: 700;
+        text-align: center;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        max-width: 300px;
+        line-height: 1.6;
+    }
 
-        .light-particle {
-            position: fixed;
-            pointer-events: none;
-            z-index: 1001;
-            border-radius: 50%;
-            will-change: transform, opacity;
-        }
+    /* タップエリア */
+    .tap-area {
+        position: absolute;
+        top: 50px;
+        bottom: 80px;
+        width: 50%;
+        z-index: 10;
+    }
 
-        .sparkle {
-            position: fixed;
-            pointer-events: none;
-            z-index: 500;
-            font-size: 24px;
-            animation: sparkleFade 0.8s forwards;
-        }
-        @keyframes sparkleFade {
-            0% { transform: scale(0); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0); opacity: 0; }
-        }
-    </style>
+    .tap-left { left: 0; }
+    .tap-right { right: 0; }
+
+    /* 終了画面 */
+    .end-screen {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s;
+        z-index: 200;
+    }
+
+    .end-screen.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .end-heart {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .end-title {
+        font-size: 1.5rem;
+        font-weight: 900;
+        margin-bottom: 10px;
+        background: linear-gradient(90deg, #ff6b9d, #ffd54f);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .end-subtitle {
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.6);
+        margin-bottom: 30px;
+    }
+
+    .end-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .end-btn {
+        padding: 14px 40px;
+        border-radius: 30px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .end-btn:active {
+        transform: scale(0.95);
+    }
+
+    .end-btn.primary {
+        background: linear-gradient(90deg, #ff6b9d, #e91e63);
+        border: none;
+        color: white;
+    }
+
+    .end-btn.secondary {
+        background: transparent;
+        border: 2px solid rgba(255,255,255,0.3);
+        color: white;
+    }
+
+    /* 戻るボタン */
+    .back-btn {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 25px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 20px;
+        color: white;
+        font-size: 0.85rem;
+        cursor: pointer;
+        z-index: 60;
+        backdrop-filter: blur(10px);
+    }
+</style>
+```
+
 </head>
 <body>
 
-<div class="stars" id="stars"></div>
-<div class="floating-hearts" id="floating-hearts"></div>
-<canvas id="canvas"></canvas>
+<!-- サマリーページ -->
 
-<div class="scene" id="scene">
-    <div class="hint">✨ タップして開けてね ✨</div>
+<div class="summary-page" id="summaryPage">
+    <h1 class="summary-title">💕 2024 Memories 💕</h1>
+    <p class="summary-subtitle">愛ちゃんとの思い出</p>
 
-    <div class="card card-1" id="card-1">
-        <span class="card-deco top-left">🎀</span>
-        <span class="card-deco top-right">🎀</span>
-        <span class="card-deco bottom-left">✨</span>
-        <span class="card-deco bottom-right">✨</span>
-        <h1>Happy Birthday</h1>
-        <div class="card-icon">🎂</div>
-        <div class="typing-area">
-            <span id="typing-text-1" class="typing-text"></span><span id="cursor-1" class="cursor" style="display:none;"></span>
-        </div>
+```
+<div class="photo-grid" id="photoGrid">
+    <!-- JSで生成 -->
+</div>
+
+<button class="start-btn" id="startBtn">はじめる ✨</button>
+```
+
+</div>
+
+<!-- ストーリービューア -->
+
+<div class="story-viewer" id="storyViewer">
+    <div class="progress-container" id="progressContainer">
+        <!-- JSで生成 -->
     </div>
 
-    <div class="card card-2" id="card-2">
-        <span class="card-deco top-left">💖</span>
-        <span class="card-deco top-right">💖</span>
-        <span class="card-deco bottom-left">🌸</span>
-        <span class="card-deco bottom-right">🌸</span>
-        <div class="card-icon">💝</div>
-        <div class="typing-area">
-            <p class="message-text">めっちゃ愛してるぜ<br>はるたか</p>
-        </div>
-        <div class="card-footer">With Love 💕</div>
-    </div>
+```
+<div class="tap-area tap-left" id="tapLeft"></div>
+<div class="tap-area tap-right" id="tapRight"></div>
 
-    <div class="envelope-wrapper">
-        <div class="envelope">
-            <div class="envelope-body"></div>
-            <div class="flap">
-                <svg class="flap-svg" viewBox="0 0 300 200" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id="flapGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" style="stop-color:#f8a4c0"/>
-                            <stop offset="100%" style="stop-color:#ff6b9d"/>
-                        </linearGradient>
-                    </defs>
-                    <path d="M10,0 Q0,0 0,10 L0,15 L150,105 L300,15 L300,10 Q300,0 290,0 Z" fill="url(#flapGradient)"/>
-                </svg>
-                <svg class="flap-back-svg" viewBox="0 0 300 200" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id="flapBackGradient" x1="0%" y1="100%" x2="0%" y2="0%">
-                            <stop offset="0%" style="stop-color:#880e4f"/>
-                            <stop offset="100%" style="stop-color:#ad1457"/>
-                        </linearGradient>
-                    </defs>
-                    <path d="M10,0 Q0,0 0,10 L0,15 L150,105 L300,15 L300,10 Q300,0 290,0 Z" fill="url(#flapBackGradient)"/>
-                </svg>
-            </div>
-            <div class="seal">🎀</div>
-        </div>
+<div id="slides">
+    <!-- JSで生成 -->
+</div>
+
+<button class="back-btn" id="backToSummary">← 戻る</button>
+```
+
+</div>
+
+<!-- 終了画面 -->
+
+<div class="end-screen" id="endScreen">
+    <div class="end-heart">💝</div>
+    <h2 class="end-title">ずっと大好き</h2>
+    <p class="end-subtitle">これからもよろしくね</p>
+    <div class="end-buttons">
+        <button class="end-btn primary" id="replayBtn">もう一度見る</button>
+        <button class="end-btn secondary" id="backToLetterBtn">手紙に戻る</button>
     </div>
 </div>
 
-<button class="reset-btn" id="reset-btn">🎁 もう一度見る</button>
-<a href="album.html" class="album-btn">📸 アルバムを見る</a>
-
 <script>
-    const message1 = "愛ちゃん～\nお誕生日おめでとう！🎉\n幸せな一年になりますように";
-    
-    let isOpened = false;
-    let canDoubleTap = false;
-    let isTyping1 = false;
-    let showingCard2 = false;
-    let lastTapTime = 0;
+    // ===== 写真データ（ここを編集してください） =====
+    const photos = [
+        { src: 'photos/1.jpg', caption: 'キャプション1を入力' },
+        { src: 'photos/2.jpg', caption: 'キャプション2を入力' },
+        { src: 'photos/3.jpg', caption: 'キャプション3を入力' },
+        { src: 'photos/4.jpg', caption: 'キャプション4を入力' },
+        { src: 'photos/5.jpg', caption: 'キャプション5を入力' },
+        { src: 'photos/6.jpg', caption: 'キャプション6を入力' },
+        { src: 'photos/7.jpg', caption: 'キャプション7を入力' },
+        { src: 'photos/8.jpg', caption: 'キャプション8を入力' },
+        { src: 'photos/9.jpg', caption: 'キャプション9を入力' },
+        { src: 'photos/10.jpg', caption: 'キャプション10を入力' },
+    ];
 
-    // 星の生成（数を減らす）
-    function createStars() {
-        const container = document.getElementById('stars');
-        for (let i = 0; i < 30; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            const size = (Math.random() * 2 + 1) + 'px';
-            star.style.width = size;
-            star.style.height = size;
-            container.appendChild(star);
-        }
-    }
+    const SLIDE_DURATION = 5000; // 各スライドの表示時間（ミリ秒）
 
-    // 浮遊ハート（数を減らす）
-    function createFloatingHearts() {
-        const container = document.getElementById('floating-hearts');
-        const hearts = ['💕', '💖', '💗'];
-        for (let i = 0; i < 8; i++) {
-            const heart = document.createElement('div');
-            heart.className = 'floating-heart';
-            heart.textContent = hearts[i % hearts.length];
-            heart.style.left = Math.random() * 100 + '%';
-            heart.style.animationDelay = Math.random() * 10 + 's';
-            container.appendChild(heart);
-        }
-    }
+    let currentSlide = 0;
+    let progressInterval = null;
+    let progress = 0;
 
-    // 同心円の絵文字バースト（修正版）
-    function createEmojiBurst(x, y) {
-        const emojis = ['🫶', '🥰', '💘', '💖'];
-        const rings = [
-            { count: 8, delay: 0, startRadius: 20, maxRadius: 80 },
-            { count: 10, delay: 150, startRadius: 30, maxRadius: 120 },
-            { count: 12, delay: 300, startRadius: 40, maxRadius: 160 }
-        ];
-        
-        rings.forEach(ring => {
-            setTimeout(() => {
-                for (let i = 0; i < ring.count; i++) {
-                    const emoji = document.createElement('div');
-                    emoji.className = 'emoji-burst';
-                    emoji.textContent = emojis[i % emojis.length];
-                    emoji.style.left = x + 'px';
-                    emoji.style.top = y + 'px';
-                    document.body.appendChild(emoji);
-                    
-                    const angle = (i / ring.count) * Math.PI * 2;
-                    let radius = ring.startRadius;
-                    let opacity = 0;
-                    let scale = 0.5;
-                    
-                    function animate() {
-                        // 円が広がる（最大半径まで）
-                        if (radius < ring.maxRadius) {
-                            radius += 3;
-                        }
-                        
-                        // 円周上の位置を計算
-                        const px = Math.cos(angle) * radius;
-                        const py = Math.sin(angle) * radius;
-                        
-                        // フェードイン
-                        if (radius < ring.maxRadius * 0.6 && opacity < 1) {
-                            opacity += 0.15;
-                        }
-                        
-                        // スケール
-                        if (scale < 1) {
-                            scale += 0.1;
-                        }
-                        
-                        // フェードアウト
-                        if (radius >= ring.maxRadius * 0.7) {
-                            opacity -= 0.06;
-                        }
-                        
-                        emoji.style.transform = `translate(-50%, -50%) translate(${px}px, ${py}px) scale(${scale})`;
-                        emoji.style.opacity = Math.max(0, opacity);
-                        
-                        if (opacity > 0) {
-                            requestAnimationFrame(animate);
-                        } else {
-                            emoji.remove();
-                        }
-                    }
-                    animate();
-                }
-            }, ring.delay);
+    // DOM要素
+    const summaryPage = document.getElementById('summaryPage');
+    const storyViewer = document.getElementById('storyViewer');
+    const endScreen = document.getElementById('endScreen');
+    const photoGrid = document.getElementById('photoGrid');
+    const progressContainer = document.getElementById('progressContainer');
+    const slidesContainer = document.getElementById('slides');
+
+    // 初期化
+    function init() {
+        // グリッド生成
+        photos.forEach((photo, i) => {
+            const div = document.createElement('div');
+            div.className = 'grid-photo';
+            div.innerHTML = `<img src="${photo.src}" alt="" onerror="this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;background:#333;display:flex;align-items:center;justify-content:center;color:#666;font-size:1.5rem;\\'>📷</div>'">`;
+            photoGrid.appendChild(div);
+        });
+
+        // プログレスバー生成
+        photos.forEach(() => {
+            const bar = document.createElement('div');
+            bar.className = 'progress-bar';
+            bar.innerHTML = '<div class="fill"></div>';
+            progressContainer.appendChild(bar);
+        });
+
+        // スライド生成
+        photos.forEach((photo, i) => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.innerHTML = `
+                <div class="slide-bg"></div>
+                <div class="photo-frame">
+                    <img src="${photo.src}" alt="" onerror="this.outerHTML='<div class=\\'photo-placeholder\\'>📷</div>'">
+                </div>
+                <p class="caption">${photo.caption}</p>
+            `;
+            slidesContainer.appendChild(slide);
         });
     }
 
-    // 花びら（修正版）
-    function createFallingPetals() {
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
-        const colors = ['#ffb7c5', '#ffc1cc', '#ffd1dc'];
+    // ストーリー開始
+    function startStory() {
+        summaryPage.classList.add('hidden');
+        storyViewer.classList.add('active');
+        currentSlide = 0;
+        showSlide(0);
+        startProgress();
+    }
+
+    // スライド表示
+    function showSlide(index) {
+        const slides = document.querySelectorAll('.slide');
+        const bars = document.querySelectorAll('.progress-bar');
+
+        slides.forEach((s, i) => {
+            s.classList.toggle('active', i === index);
+        });
+
+        bars.forEach((b, i) => {
+            b.classList.remove('active', 'complete');
+            if (i < index) b.classList.add('complete');
+            if (i === index) b.classList.add('active');
+        });
+    }
+
+    // プログレス開始
+    function startProgress() {
+        progress = 0;
+        clearInterval(progressInterval);
         
-        for (let i = 0; i < 15; i++) {
-            setTimeout(() => {
-                const petal = document.createElement('div');
-                petal.className = 'petal';
-                petal.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 0 Q15 5 10 15 Q5 5 10 0" fill="${colors[i % 3]}" opacity="0.8"/></svg>`;
-                
-                let x = centerX + (Math.random() - 0.5) * 100;
-                let y = centerY + (Math.random() - 0.5) * 100;
-                let vx = (Math.random() - 0.5) * 3;
-                let vy = -1 + Math.random();
-                let rotation = Math.random() * 360;
-                let opacity = 0;
-                let scale = 0.3;
-                let time = 0;
-                
-                petal.style.left = '0px';
-                petal.style.top = '0px';
-                document.body.appendChild(petal);
-                
-                function animate() {
-                    time++;
-                    if (opacity < 0.9) opacity += 0.05;
-                    if (scale < 1) scale += 0.03;
-                    
-                    vx *= 0.99;
-                    vy += 0.03;
-                    x += vx + Math.sin(time * 0.05) * 0.5;
-                    y += vy;
-                    rotation += 2;
-                    
-                    if (y > window.innerHeight * 0.7) opacity -= 0.02;
-                    
-                    petal.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`;
-                    petal.style.opacity = opacity;
-                    
-                    if (opacity > 0 && y < window.innerHeight + 50) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        petal.remove();
-                    }
-                }
-                animate();
-            }, i * 60);
-        }
-    }
-
-    // 金色パーティクル（修正版）
-    function createGoldenParticles() {
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
-        const colors = ['#ffd700', '#ffecb3', '#ffe082'];
+        const bar = document.querySelectorAll('.progress-bar')[currentSlide];
         
-        for (let i = 0; i < 20; i++) {
-            setTimeout(() => {
-                const particle = document.createElement('div');
-                particle.className = 'light-particle';
-                const size = 4 + Math.random() * 4;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                const color = colors[i % 3];
-                particle.style.background = color;
-                particle.style.boxShadow = `0 0 ${size}px ${color}`;
-                particle.style.left = centerX + 'px';
-                particle.style.top = centerY + 'px';
-                document.body.appendChild(particle);
-                
-                const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 0.8;
-                const speed = 3 + Math.random() * 4;
-                let vx = Math.cos(angle) * speed;
-                let vy = Math.sin(angle) * speed;
-                let x = 0;
-                let y = 0;
-                let opacity = 0;
-                let scale = 0;
-                
-                function animate() {
-                    if (opacity < 1) opacity += 0.08;
-                    if (scale < 1) scale += 0.1;
-                    
-                    vx *= 0.98;
-                    vy *= 0.98;
-                    vy += 0.02;
-                    x += vx;
-                    y += vy;
-                    
-                    if (opacity >= 1) opacity -= 0.015;
-                    
-                    particle.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
-                    particle.style.opacity = opacity;
-                    
-                    if (opacity > 0) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        particle.remove();
-                    }
-                }
-                animate();
-            }, i * 30);
-        }
-    }
-
-    // メイン演出
-    function celebrationEffect(x, y) {
-        createEmojiBurst(x, y);
-        setTimeout(() => createGoldenParticles(), 150);
-        setTimeout(() => createFallingPetals(), 300);
-    }
-
-    // キラキラ
-    function createSparkle(x, y) {
-        const sparkles = ['✨', '⭐'];
-        for (let i = 0; i < 3; i++) {
-            const el = document.createElement('div');
-            el.className = 'sparkle';
-            el.textContent = sparkles[i % 2];
-            el.style.left = (x + (Math.random() - 0.5) * 80) + 'px';
-            el.style.top = (y + (Math.random() - 0.5) * 80) + 'px';
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 800);
-        }
-    }
-
-    // 2枚目ハート（修正版）
-    function createHeartEffect(x, y) {
-        const hearts = ['💖', '💕', '💗', '🩷', '💝'];
-        for (let i = 0; i < 10; i++) {
-            setTimeout(() => {
-                const heart = document.createElement('div');
-                heart.className = 'emoji-burst';
-                heart.textContent = hearts[i % hearts.length];
-                heart.style.fontSize = '26px';
-                heart.style.left = x + 'px';
-                heart.style.top = y + 'px';
-                document.body.appendChild(heart);
-                
-                const angle = (i / 10) * Math.PI * 2;
-                const speed = 4 + Math.random() * 2;
-                let vx = Math.cos(angle) * speed;
-                let vy = Math.sin(angle) * speed;
-                let px = 0, py = 0;
-                let opacity = 1;
-                let scale = 0;
-                let frame = 0;
-                
-                function animate() {
-                    frame++;
-                    if (scale < 1) scale += 0.12;
-                    vx *= 0.95;
-                    vy *= 0.95;
-                    px += vx;
-                    py += vy;
-                    if (frame > 20) opacity -= 0.04;
-                    
-                    heart.style.transform = `translate(-50%, -50%) translate(${px}px, ${py}px) scale(${scale})`;
-                    heart.style.opacity = Math.max(0, opacity);
-                    
-                    if (opacity > 0) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        heart.remove();
-                    }
-                }
-                animate();
-            }, i * 40);
-        }
-    }
-
-    // タイピング
-    function startTyping(targetId, cursorId, message, callback) {
-        const target = document.getElementById(targetId);
-        const cursor = document.getElementById(cursorId);
-        cursor.style.display = 'inline-block';
-        let i = 0;
-        function type() {
-            if (i < message.length) {
-                target.textContent += message.charAt(i);
-                i++;
-                setTimeout(type, 100);
-            } else {
-                setTimeout(() => {
-                    cursor.style.display = 'none';
-                    if (callback) callback();
-                }, 500);
-            }
-        }
-        type();
-    }
-
-    // 紙吹雪（数を減らす）
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let confettiRunning = false;
-
-    function startConfetti() {
-        if (confettiRunning) return;
-        confettiRunning = true;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        const colors = ['#ff6b9d', '#ffd54f', '#4fc3f7', '#ba68c8', '#81c784'];
-        for (let i = 0; i < 50; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                size: Math.random() * 7 + 3,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                speedY: Math.random() * 2 + 1.5,
-                speedX: Math.random() * 1.5 - 0.75,
-                rotation: Math.random() * 360,
-                rotationSpeed: Math.random() * 4 - 2
-            });
-        }
-
-        function update() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.y += p.speedY;
-                p.x += p.speedX;
-                p.rotation += p.rotationSpeed;
-                
-                ctx.save();
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.rotation * Math.PI / 180);
-                ctx.fillStyle = p.color;
-                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
-                ctx.restore();
-                
-                if (p.y > canvas.height + 20) {
-                    p.y = -20;
-                    p.x = Math.random() * canvas.width;
-                }
-            });
-            requestAnimationFrame(update);
-        }
-        update();
-    }
-
-    function openEnvelope(e) {
-        if (isOpened) return;
-        isOpened = true;
-        document.getElementById('scene').classList.add('opened');
-        
-        const x = e.clientX || window.innerWidth / 2;
-        const y = e.clientY || window.innerHeight / 2;
-        
-        celebrationEffect(x, y);
-        startConfetti();
-        
-        setTimeout(() => {
-            if (!isTyping1) {
-                isTyping1 = true;
-                startTyping('typing-text-1', 'cursor-1', message1, () => { canDoubleTap = true; });
-            }
-        }, 1300);
-    }
-
-    function handleDoubleTap(e) {
-        if (!canDoubleTap) return;
-        const currentTime = Date.now();
-        if (currentTime - lastTapTime < 300 && currentTime - lastTapTime > 0) {
-            e.preventDefault();
-            const scene = document.getElementById('scene');
-            const x = e.clientX || window.innerWidth / 2;
-            const y = e.clientY || window.innerHeight / 2;
+        progressInterval = setInterval(() => {
+            progress += 100 / (SLIDE_DURATION / 100);
+            bar.style.setProperty('--progress', progress + '%');
             
-            if (!showingCard2) {
-                scene.classList.add('show-card2');
-                showingCard2 = true;
-                createSparkle(x, y);
-                createHeartEffect(x, y);
-            } else {
-                scene.classList.remove('show-card2');
-                showingCard2 = false;
-                createSparkle(x, y);
+            if (progress >= 100) {
+                nextSlide();
             }
+        }, 100);
+    }
+
+    // 次のスライド
+    function nextSlide() {
+        clearInterval(progressInterval);
+        
+        if (currentSlide < photos.length - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+            startProgress();
+        } else {
+            // 終了
+            storyViewer.classList.remove('active');
+            endScreen.classList.add('active');
         }
-        lastTapTime = currentTime;
     }
 
-    function resetCard() {
-        const scene = document.getElementById('scene');
-        scene.classList.remove('opened', 'show-card2');
-        document.getElementById('typing-text-1').textContent = '';
-        document.getElementById('cursor-1').style.display = 'none';
-        isOpened = false;
-        isTyping1 = false;
-        showingCard2 = false;
-        canDoubleTap = false;
-        lastTapTime = 0;
+    // 前のスライド
+    function prevSlide() {
+        clearInterval(progressInterval);
+        
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+            startProgress();
+        } else {
+            // 最初のスライドをリスタート
+            progress = 0;
+            startProgress();
+        }
     }
 
-    document.getElementById('scene').addEventListener('click', function(e) {
-        if (!isOpened) openEnvelope(e);
-        else handleDoubleTap(e);
+    // リプレイ
+    function replay() {
+        endScreen.classList.remove('active');
+        storyViewer.classList.add('active');
+        currentSlide = 0;
+        
+        // プログレスバーリセット
+        document.querySelectorAll('.progress-bar').forEach(b => {
+            b.classList.remove('active', 'complete');
+            b.style.setProperty('--progress', '0%');
+        });
+        
+        showSlide(0);
+        startProgress();
+    }
+
+    // サマリーに戻る
+    function backToSummary() {
+        clearInterval(progressInterval);
+        storyViewer.classList.remove('active');
+        summaryPage.classList.remove('hidden');
+        
+        // リセット
+        document.querySelectorAll('.progress-bar').forEach(b => {
+            b.classList.remove('active', 'complete');
+            b.style.setProperty('--progress', '0%');
+        });
+    }
+
+    // イベント設定
+    document.getElementById('startBtn').addEventListener('click', startStory);
+    document.getElementById('tapRight').addEventListener('click', nextSlide);
+    document.getElementById('tapLeft').addEventListener('click', prevSlide);
+    document.getElementById('replayBtn').addEventListener('click', replay);
+    document.getElementById('backToSummary').addEventListener('click', backToSummary);
+    
+    document.getElementById('backToLetterBtn').addEventListener('click', () => {
+        window.location.href = 'index.html';
     });
 
-    document.getElementById('reset-btn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        resetCard();
-    });
-
-    createStars();
-    createFloatingHearts();
+    // 初期化実行
+    init();
 </script>
+
 </body>
 </html>
