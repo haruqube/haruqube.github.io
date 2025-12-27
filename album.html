@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2024 Album 💕</title>
+    <title>2025 Memories 💕</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
@@ -17,17 +17,17 @@
 
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background: #000;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
             color: white;
             overflow: hidden;
             height: 100dvh;
             user-select: none;
         }
 
+        /* ===== サマリーページ ===== */
         .summary-page {
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -43,9 +43,21 @@
         }
 
         .summary-title {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 900;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .summary-title .heart {
+            color: #ff6b9d;
+            font-style: normal;
+        }
+
+        .summary-title .text {
             background: linear-gradient(90deg, #ff6b9d, #ffd54f, #ff6b9d);
             background-size: 200% auto;
             -webkit-background-clip: text;
@@ -60,51 +72,148 @@
         .summary-subtitle {
             font-size: 0.9rem;
             color: rgba(255,255,255,0.6);
-            margin-bottom: 25px;
+            margin-bottom: 40px;
         }
 
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            width: 90%;
-            max-width: 380px;
-            margin-bottom: 30px;
+        /* ===== 箱 ===== */
+        .gift-box-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 40px;
+            perspective: 800px;
         }
 
-        .grid-photo {
-            aspect-ratio: 1;
-            background: linear-gradient(135deg, #ff6b9d33, #9c27b033);
+        .gift-box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        .box-body {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 120px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
             border-radius: 8px;
-            overflow: hidden;
-            opacity: 0;
-            transform: scale(0.8);
-            animation: gridAppear 0.4s ease forwards;
+            box-shadow: 0 10px 40px rgba(233, 30, 99, 0.4);
+            z-index: 1;
         }
 
-        .grid-photo img {
+        .box-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(90deg, #ffd54f, #ffeb3b, #ffd54f);
+        }
+
+        .box-lid {
+            position: absolute;
+            bottom: 115px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 35px;
+            background: linear-gradient(135deg, #ff8a80 0%, #ff6b9d 100%);
+            border-radius: 8px 8px 0 0;
+            transform-origin: bottom center;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), 
+                        opacity 0.5s ease 0.6s,
+                        z-index 0s 0.4s;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .box-lid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(90deg, #ffd54f, #ffeb3b, #ffd54f);
+        }
+
+        .box-ribbon {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), 
+                        opacity 0.5s ease 0.6s,
+                        z-index 0s 0.4s;
+            z-index: 11;
+        }
+
+        .gift-box.opened .box-lid {
+            transform: translateX(-50%) translate(120px, -150px) rotate(20deg);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .gift-box.opened .box-ribbon {
+            transform: translateX(-50%) translate(100px, -180px) rotate(25deg) scale(1.2);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* 飛び出す写真 */
+        .flying-photos {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            z-index: 50;
+        }
+
+        .flying-photo {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            background: white;
+            border-radius: 6px;
+            padding: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(0) rotate(0deg) scale(0);
+            transition: none;
+        }
+
+        .flying-photo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 4px;
         }
 
-        @keyframes gridAppear {
-            to { opacity: 1; transform: scale(1); }
+        .flying-photo.animate {
+            animation: flyOut 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        .grid-photo:nth-child(1) { animation-delay: 0.1s; }
-        .grid-photo:nth-child(2) { animation-delay: 0.15s; }
-        .grid-photo:nth-child(3) { animation-delay: 0.2s; }
-        .grid-photo:nth-child(4) { animation-delay: 0.25s; }
-        .grid-photo:nth-child(5) { animation-delay: 0.3s; }
-        .grid-photo:nth-child(6) { animation-delay: 0.35s; }
-        .grid-photo:nth-child(7) { animation-delay: 0.4s; }
-        .grid-photo:nth-child(8) { animation-delay: 0.45s; }
-        .grid-photo:nth-child(9) { animation-delay: 0.5s; }
-        .grid-photo:nth-child(10) { animation-delay: 0.55s; }
-        .grid-photo:nth-child(11) { animation-delay: 0.6s; }
-        .grid-photo:nth-child(12) { animation-delay: 0.65s; }
-        .grid-photo:nth-child(13) { animation-delay: 0.7s; }
+        @keyframes flyOut {
+            0% {
+                opacity: 0;
+                transform: translateY(0) rotate(0deg) scale(0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-150px) rotate(var(--rotate)) scale(1);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(var(--endX), var(--endY)) rotate(var(--endRotate)) scale(0.9);
+            }
+        }
 
         .start-btn {
             padding: 15px 50px;
@@ -123,9 +232,28 @@
             transform: scale(0.95);
         }
 
+        .start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .tap-hint {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .tap-hint.show {
+            opacity: 1;
+        }
+
+        /* ===== ストーリービューア ===== */
         .story-viewer {
             position: fixed;
             inset: 0;
+            background: #000;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s;
@@ -353,15 +481,66 @@
             z-index: 60;
             backdrop-filter: blur(10px);
         }
+
+        /* キラキラエフェクト */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1.5rem;
+            animation: sparkleAnim 1s forwards;
+            z-index: 1000;
+        }
+
+        @keyframes sparkleAnim {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
 <div class="summary-page" id="summaryPage">
-    <h1 class="summary-title">💕 2024 Memories 💕</h1>
+    <h1 class="summary-title">
+        <span class="heart">💕</span>
+        <span class="text">2025 Memories</span>
+        <span class="heart">💕</span>
+    </h1>
     <p class="summary-subtitle">愛ちゃんとの思い出</p>
-    <div class="photo-grid" id="photoGrid"></div>
-    <button class="start-btn" id="startBtn">はじめる ✨</button>
+
+    <div class="gift-box-container">
+        <div class="gift-box" id="giftBox">
+            <div class="flying-photos" id="flyingPhotos"></div>
+            <div class="box-ribbon">
+                <svg width="120" height="90" viewBox="0 0 120 90">
+                    <defs>
+                        <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#fff3e0;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#ffd54f;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#ffb300;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <path d="M60 40 C 30 10, 5 20, 10 45 C 15 60, 40 50, 60 40" fill="url(#ribbonGrad)" stroke="#e6b800" stroke-width="1.5"/>
+                    <path d="M60 40 C 40 25, 20 30, 25 40" fill="none" stroke="#d4a017" stroke-width="1" opacity="0.5"/>
+                    
+                    <path d="M60 40 C 90 10, 115 20, 110 45 C 105 60, 80 50, 60 40" fill="url(#ribbonGrad)" stroke="#e6b800" stroke-width="1.5"/>
+                    <path d="M60 40 C 80 25, 100 30, 95 40" fill="none" stroke="#d4a017" stroke-width="1" opacity="0.5"/>
+                    
+                    <path d="M55 45 L 30 85 L 45 80 L 55 50 Z" fill="url(#ribbonGrad)" stroke="#e6b800" stroke-width="1"/>
+                    
+                    <path d="M65 45 L 90 85 L 75 80 L 65 50 Z" fill="url(#ribbonGrad)" stroke="#e6b800" stroke-width="1"/>
+                    
+                    <rect x="52" y="32" width="16" height="18" rx="4" fill="url(#ribbonGrad)" stroke="#e6b800" stroke-width="1.5"/>
+                </svg>
+            </div>
+            <div class="box-lid"></div>
+            <div class="box-body"></div>
+        </div>
+    </div>
+
+    <button class="start-btn" id="startBtn">箱を開ける 🎁</button>
+    <p class="tap-hint" id="tapHint">✨ タップしてストーリーを見る ✨</p>
 </div>
 
 <div class="story-viewer" id="storyViewer">
@@ -374,8 +553,8 @@
 
 <div class="end-screen" id="endScreen">
     <div class="end-heart">💝</div>
-    <h2 class="end-title">ずっと大好き</h2>
-    <p class="end-subtitle">これからもよろしくね</p>
+    <h2 class="end-title">楽しかったね～</h2>
+    <p class="end-subtitle">来年も思い出つくっていこ～！</p>
     <div class="end-buttons">
         <button class="end-btn primary" id="replayBtn">もう一度見る</button>
         <button class="end-btn secondary" id="backToLetterBtn">手紙に戻る</button>
@@ -383,44 +562,40 @@
 </div>
 
 <script>
-    // ===== 写真データ（13枚） =====
-    // photosフォルダに 1.jpg ~ 13.jpg を置いてください
     const photos = [
-        { src: 'photos/1.JPG', caption: 'キャプション1' },
-        { src: 'photos/2.JPG', caption: 'キャプション2' },
-        { src: 'photos/3.JPG', caption: 'キャプション3' },
-        { src: 'photos/4.JPG', caption: 'キャプション4' },
-        { src: 'photos/5.JPG', caption: 'キャプション5' },
-        { src: 'photos/6.JPG', caption: 'キャプション6' },
-        { src: 'photos/7.JPG', caption: 'キャプション7' },
-        { src: 'photos/8.JPG', caption: 'キャプション8' },
-        { src: 'photos/9.JPG', caption: 'キャプション9' },
-        { src: 'photos/10.JPG', caption: 'キャプション10' },
-        { src: 'photos/11.JPG', caption: 'キャプション11' },
-        { src: 'photos/12.JPG', caption: 'キャプション12' },
-        { src: 'photos/13.JPEG', caption: 'キャプション13' },
+        { src: 'photos/1.JPG', caption: 'ディズニーでピースする愛ちゃん' },
+        { src: 'photos/2.JPG', caption: 'インテリ系愛ちゃん' },
+        { src: 'photos/3.JPG', caption: '食いしん坊愛ちゃん' },
+        { src: 'photos/4.JPG', caption: 'ちょっとチャラいカップル' },
+        { src: 'photos/5.JPG', caption: '唇とんがってる' },
+        { src: 'photos/6.JPG', caption: 'かわいい' },
+        { src: 'photos/7.JPG', caption: '落ち着き始めたカップル' },
+        { src: 'photos/8.JPG', caption: '福まるを愛でる図' },
+        { src: 'photos/9.JPG', caption: '食いしん坊愛ちゃんver.2' },
+        { src: 'photos/10.JPG', caption: 'コーヒーを嗜む愛ちゃん' },
+        { src: 'photos/11.JPG', caption: 'すごい角度で見てくる' },
+        { src: 'photos/12.JPG', caption: '健康的なカップル' },
+        { src: 'photos/13.JPEG', caption: 'とてもかわいい' },
     ];
 
     const SLIDE_DURATION = 5000;
     let currentSlide = 0;
     let progressInterval = null;
     let progress = 0;
+    let boxOpened = false;
 
     const summaryPage = document.getElementById('summaryPage');
     const storyViewer = document.getElementById('storyViewer');
     const endScreen = document.getElementById('endScreen');
-    const photoGrid = document.getElementById('photoGrid');
     const progressContainer = document.getElementById('progressContainer');
     const slidesContainer = document.getElementById('slides');
+    const giftBox = document.getElementById('giftBox');
+    const flyingPhotos = document.getElementById('flyingPhotos');
+    const startBtn = document.getElementById('startBtn');
+    const tapHint = document.getElementById('tapHint');
 
     function init() {
-        photos.forEach((photo) => {
-            const div = document.createElement('div');
-            div.className = 'grid-photo';
-            div.innerHTML = `<img src="${photo.src}" alt="" onerror="this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;background:#333;display:flex;align-items:center;justify-content:center;color:#666;font-size:1.5rem;\\'>📷</div>'">`;
-            photoGrid.appendChild(div);
-        });
-
+        // プログレスバー生成
         photos.forEach(() => {
             const bar = document.createElement('div');
             bar.className = 'progress-bar';
@@ -428,6 +603,7 @@
             progressContainer.appendChild(bar);
         });
 
+        // スライド生成
         photos.forEach((photo) => {
             const slide = document.createElement('div');
             slide.className = 'slide';
@@ -440,6 +616,97 @@
             `;
             slidesContainer.appendChild(slide);
         });
+
+        // 飛び出す写真を準備
+        createFlyingPhotos();
+    }
+
+    function createFlyingPhotos() {
+        // 綺麗なアーチ型に配置
+        const positions = [
+            // 上段（5枚）
+            { endX: -100, endY: -200, rotate: -12, endRotate: -15 },
+            { endX: -50, endY: -220, rotate: -5, endRotate: -8 },
+            { endX: 0, endY: -230, rotate: 0, endRotate: 3 },
+            { endX: 50, endY: -220, rotate: 5, endRotate: 8 },
+            { endX: 100, endY: -200, rotate: 12, endRotate: 15 },
+            // 中段（5枚）
+            { endX: -80, endY: -140, rotate: -10, endRotate: -12 },
+            { endX: -30, endY: -155, rotate: -3, endRotate: -5 },
+            { endX: 30, endY: -155, rotate: 3, endRotate: 5 },
+            { endX: 80, endY: -140, rotate: 10, endRotate: 12 },
+            // 下段（3枚）
+            { endX: -50, endY: -90, rotate: -8, endRotate: -10 },
+            { endX: 0, endY: -100, rotate: 0, endRotate: 2 },
+            { endX: 50, endY: -90, rotate: 8, endRotate: 10 },
+            // 追加（1枚）
+            { endX: 0, endY: -180, rotate: 0, endRotate: -3 },
+        ];
+
+        photos.forEach((photo, i) => {
+            const div = document.createElement('div');
+            div.className = 'flying-photo';
+            div.innerHTML = `<img src="${photo.src}" alt="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2230%22>📷</text></svg>'">`;
+            
+            const pos = positions[i % positions.length];
+            div.style.setProperty('--endX', pos.endX + 'px');
+            div.style.setProperty('--endY', pos.endY + 'px');
+            div.style.setProperty('--rotate', pos.rotate + 'deg');
+            div.style.setProperty('--endRotate', pos.endRotate + 'deg');
+            div.dataset.index = i;
+            
+            flyingPhotos.appendChild(div);
+        });
+    }
+
+    function openBox() {
+        if (boxOpened) return;
+        boxOpened = true;
+        
+        giftBox.classList.add('opened');
+        startBtn.disabled = true;
+        startBtn.textContent = '開いています...';
+        
+        // キラキラエフェクト
+        createSparkles();
+        
+        // 写真を順番に飛び出させる
+        const flyingPhotoElements = document.querySelectorAll('.flying-photo');
+        flyingPhotoElements.forEach((photo, i) => {
+            setTimeout(() => {
+                photo.classList.add('animate');
+            }, 300 + i * 100);
+        });
+
+        // ボタン変更
+        setTimeout(() => {
+            startBtn.textContent = 'ストーリーを見る ✨';
+            startBtn.disabled = false;
+            tapHint.classList.add('show');
+            
+            startBtn.onclick = startStory;
+        }, 300 + photos.length * 100 + 500);
+    }
+
+    function createSparkles() {
+        const container = document.querySelector('.gift-box-container');
+        const rect = container.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        const sparkleEmojis = ['✨', '⭐', '💫', '🌟'];
+        
+        for (let i = 0; i < 12; i++) {
+            setTimeout(() => {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.textContent = sparkleEmojis[i % sparkleEmojis.length];
+                sparkle.style.left = (centerX + (Math.random() - 0.5) * 150) + 'px';
+                sparkle.style.top = (centerY + (Math.random() - 0.5) * 150) + 'px';
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 1000);
+            }, i * 80);
+        }
     }
 
     function startStory() {
@@ -518,7 +785,8 @@
         });
     }
 
-    document.getElementById('startBtn').addEventListener('click', startStory);
+    // イベント
+    startBtn.addEventListener('click', openBox);
     document.getElementById('tapRight').addEventListener('click', nextSlide);
     document.getElementById('tapLeft').addEventListener('click', prevSlide);
     document.getElementById('replayBtn').addEventListener('click', replay);
